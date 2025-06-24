@@ -171,3 +171,15 @@ body {
   </script>
 </body>
 </html>
+
+document.addEventListener('keydown', e => {
+  // Povoľ F11, zablokuj všetko ostatné, čo si chcel blokovať
+  if (
+    e.key === 'F12' || // blokuj F12
+    e.key.toLowerCase() === 'f' || // blokuj písmeno F (nie F11)
+    (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
+    (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i')
+  ) {
+    e.preventDefault();
+  }
+});
