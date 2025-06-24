@@ -3,7 +3,7 @@
   top: 0; left: 0;
   width: 100vw;
   height: 100vh;
-  pointer-events: none; /* aby to neblokovalo kliky */
-  cursor: none; /* skryje kurzor */
-  z-index: 100000; /* nad iframe */
+  pointer-events: none;
+  cursor: none;
+  z-index: 100000; /* musí byť vyššie ako iframe */
 }
