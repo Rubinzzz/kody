@@ -16,6 +16,17 @@
       color: white;
     }
 
+    #block-yt-top-left {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;  /* Môžeš prispôsobiť podľa potreby */
+  height: 60px;
+  z-index: 99999;
+  pointer-events: auto;
+  background: transparent;
+}
+
     #block-yt-left-button {
   position: fixed;
   bottom: 10px;
@@ -66,6 +77,8 @@
   allow="autoplay; encrypted-media"
   allowfullscreen
 ></iframe>
+
+<div id="block-yt-top-left"></div>
 
   <div id="watermark">Tvoj kód: N/A</div>
   <div id="block-yt-button"></div>
