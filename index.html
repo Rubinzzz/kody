@@ -129,7 +129,7 @@ body {
     const watermark = document.getElementById('watermark');
 
     if (email && codes[email]) {
-      watermark.textContent = `Tvoj kód: ${codes[email]}`;
+      watermark.textContent = `${codes[email]}`;
     } else {
       watermark.textContent = "Tvoj kód: Nie je dostupný";
     }
