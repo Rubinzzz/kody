@@ -1,1 +1,68 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: black;
+  font-family: Arial, sans-serif;
+  color: white;
+  cursor: none; /* skryje myš */
+}
 
+iframe {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  border: none;
+  z-index: 1;
+}
+
+#watermark {
+  position: fixed;
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 5px black;
+  z-index: 9999;
+  pointer-events: none;
+  user-select: none;
+  transition: all 0.5s ease;
+}
+
+/* Prekrytia */
+#block-yt-button, #block-yt-left-button, #block-yt-top-left, #block-yt-top-right {
+  position: fixed;
+  background: transparent;
+  z-index: 99999;
+  pointer-events: auto;
+}
+
+#block-yt-button {
+  bottom: 10px;
+  right: 10px;
+  width: 130px;
+  height: 40px;
+}
+
+#block-yt-left-button {
+  bottom: 10px;
+  left: 10px;
+  width: 160px;
+  height: 50px;
+}
+
+#block-yt-top-left {
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 60px;
+}
+
+#block-yt-top-right {
+  top: 10px;
+  right: 10px;
+  width: 150px;
+  height: 60px;
+}
