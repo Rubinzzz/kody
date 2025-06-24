@@ -1,28 +1,43 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Kód pre diváka</title>
   <style>
     body {
       margin: 0;
-      background: transparent;
+      overflow: hidden;
+      background: black;
     }
     #watermark {
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: 20px;
+      left: 20px;
       font-size: 24px;
       color: white;
-      text-shadow: 1px 1px 4px black;
       font-weight: bold;
+      text-shadow: 2px 2px 5px black;
+      z-index: 10;
       pointer-events: none;
       user-select: none;
-      z-index: 9999;
+    }
+    iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+      z-index: 1;
     }
   </style>
 </head>
 <body>
+
+  <iframe
+    src="https://www.youtube.com/embed/dD07iE4kqys?autoplay=1&mute=1"
+    allow="autoplay; encrypted-media"
+    allowfullscreen
+  ></iframe>
+
   <div id="watermark">Načítavam kód...</div>
 
   <script>
@@ -39,11 +54,12 @@
     const email = getParam("email");
     let code = "Neznámy používateľ";
 
-    if(email && emailToCodeMap[email]){
+    if (email && emailToCodeMap[email]) {
       code = emailToCodeMap[email];
     }
 
     document.getElementById("watermark").innerText = "Tvoj kód: " + code;
   </script>
+
 </body>
 </html>
