@@ -31,16 +31,28 @@
       pointer-events: none;
       user-select: none;
     }
+    /* prekrytie pravého dolného rohu */
+    #block-yt-button {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      width: 130px;
+      height: 40px;
+      z-index: 99999;
+      pointer-events: auto;
+      background: transparent;
+    }
   </style>
 </head>
 <body>
   <iframe
-    src="https://www.youtube.com/embed/dD07iE4kqys?autoplay=1&mute=1&fs=0"
+    src="https://www.youtube.com/embed/dD07iE4kqys?autoplay=1&mute=1&fs=0&modestbranding=1&controls=0"
     allow="autoplay; encrypted-media"
     allowfullscreen
   ></iframe>
 
   <div id="watermark">Tvoj kód: N/A</div>
+  <div id="block-yt-button"></div>
 
   <script>
     // Emaily a ich kódy
@@ -52,10 +64,10 @@
 
     function getParam(name) {
       const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(name);
+      return urlParams.get(name)?.toLowerCase();
     }
 
-    const email = getParam('email')?.toLowerCase();
+    const email = getParam('email');
     const watermark = document.getElementById('watermark');
 
     if (email && codes[email]) {
@@ -67,12 +79,12 @@
     // Blokovanie pravého kliknutia
     document.addEventListener('contextmenu', e => e.preventDefault());
 
-    // Blokovanie fullscreen a ďalších kláves
+    // Blokovanie fullscreen a ďalších kláves (vrátane F)
     document.addEventListener('keydown', e => {
       if (
         e.key === 'F11' ||
         e.key === 'F12' ||
-        e.key.toLowerCase() === 'f' ||  // tu blokujeme F
+        e.key.toLowerCase() === 'f' ||
         (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
         (e.ctrlKey && e.shiftKey && (e.key.toLowerCase() === 'i'))
       ) {
@@ -80,8 +92,15 @@
       }
     });
 
-    // Blokovanie fullscreen cez dvojklik
+    // Blokovanie dvojkliku (fullscreen toggle)
     document.addEventListener('dblclick', e => e.preventDefault());
+
+    // Blokovanie kliknutí a pohybu myši (ak chceš viac, môžeš odkomentovať)
+    /*
+    document.addEventListener('click', e => e.preventDefault());
+    document.addEventListener('mousedown', e => e.preventDefault());
+    document.addEventListener('mousemove', e => e.preventDefault());
+    */
   </script>
 </body>
 </html>
