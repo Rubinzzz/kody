@@ -1,108 +1,108 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PWC #2</title>
-  <style>
-    html, body {
-      margin: 0; padding: 0;
-      width: 100%; height: 100%;
-      overflow: hidden;
-      background: black;
-      font-family: Arial, sans-serif;
-      color: white;
-    }
-    iframe {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-      z-index: 1;
-    }
-    #watermark {
-      position: fixed;
-      font-size: 28px;
-      font-weight: bold;
-      color: white;
-      text-shadow: 2px 2px 5px black;
-      z-index: 9999;
-      pointer-events: none;
-      user-select: none;
-      transition: all 0.5s ease;
-    }
-
-<div id="cursor-blocker"></div>
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PWC #2</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    overflow: hidden;
+    background: black;
+    font-family: Arial, sans-serif;
+    color: white;
+    cursor: none; /* skryje kurzor */
+  }
+  iframe {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    border: none;
+    z-index: 1;
+  }
+  #watermark {
+    position: fixed;
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 5px black;
+    z-index: 9999;
+    pointer-events: none;
+    user-select: none;
+    transition: all 0.5s ease;
+    top: 20px;
+    left: 20px;
+  }
+  #cursor-blocker {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none;
+    cursor: none;
+    z-index: 10000;
+  }
+</style>
 </head>
 <body>
 
-  <iframe
-    <iframe ...></iframe>
+<iframe
+  src="https://www.youtube.com/embed/D6N3J7AkBg4?autoplay=1&mute=1&fs=1&modestbranding=1&controls=0&rel=0"
+  allow="autoplay; encrypted-media"
+  allowfullscreen
+></iframe>
+
+<div id="watermark">Tvoj kód: N/A</div>
 <div id="cursor-blocker"></div>
-    src="https://www.youtube.com/embed/D6N3J7AkBg4?autoplay=1&mute=1&fs=1&modestbranding=1&controls=0&rel=0"
-    allow="autoplay; encrypted-media"
-    allowfullscreen
-  ></iframe>
 
-  <div id="watermark">Tvoj kód: N/A</div>
+<script>
+  const codes = {
+    "juraj.mesiarik15@gmail.com": "KOD_JURAJ_1234",
+    "macatomacko@gmail.com": "KOD_MACA_5678",
+    "matkosadovsky@gmail.com": "rbcr7"
+  };
 
-  <script>
-    const codes = {
-      "juraj.mesiarik15@gmail.com": "KOD_JURAJ_1234",
-      "macatomacko@gmail.com": "KOD_MACA_5678",
-      "matkosadovsky7@gmail.com": "rbcr7"
-    };
+  function getParam(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name)?.toLowerCase();
+  }
 
-    function getParam(name) {
-      const params = new URLSearchParams(window.location.search);
-      return params.get(name)?.toLowerCase();
-    }
+  const email = getParam('email');
+  const watermark = document.getElementById('watermark');
 
-    const email = getParam('email');
-    const watermark = document.getElementById('watermark');
+  if (email && codes[email]) {
+    watermark.textContent = `Tvoj kód: ${codes[email]}`;
+  } else {
+    watermark.textContent = "Tvoj kód: Nie je dostupný";
+  }
 
-    if (email && codes[email]) {
-      watermark.textContent = `Tvoj kód: ${codes[email]}`;
-    } else {
-      watermark.textContent = "Tvoj kód: Nie je dostupný";
-    }
+  // Menenie pozície vodotlače každých 15s
+  const positions = [
+    { top: "20px", left: "20px", right: "", transform: "none" },
+    { top: "20px", left: "50%", right: "", transform: "translateX(-50%)" },
+    { top: "20px", left: "auto", right: "20px", transform: "none" }
+  ];
 
-    const positions = [
-      { top: "20px", left: "20px", right: "", transform: "none" },
-      { top: "20px", left: "50%", right: "", transform: "translateX(-50%)" },
-      { top: "20px", left: "auto", right: "20px", transform: "none" }
-    ];
+  let currentPosition = 0;
+  function changeWatermarkPosition() {
+    const pos = positions[currentPosition];
+    watermark.style.top = pos.top;
+    watermark.style.left = pos.left;
+    watermark.style.right = pos.right || "";
+    watermark.style.transform = pos.transform;
+    currentPosition = (currentPosition + 1) % positions.length;
+  }
+  changeWatermarkPosition();
+  setInterval(changeWatermarkPosition, 15000);
 
-    let currentPos = 0;
+  // Zablokovať všetky klávesy (aj F11)
+  document.addEventListener('keydown', e => {
+    e.preventDefault();
+  });
 
-    function changeWatermarkPosition() {
-      const pos = positions[currentPos];
-      watermark.style.top = pos.top;
-      watermark.style.left = pos.left;
-      watermark.style.right = pos.right || "";
-      watermark.style.transform = pos.transform;
-      currentPos = (currentPos + 1) % positions.length;
-    }
-
-    changeWatermarkPosition();
-    setInterval(changeWatermarkPosition, 15000);
-
-    // Blokovanie pravého kliknutia a klávesov (okrem F11)
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', e => {
-      if (
-        e.key === 'F12' ||
-        e.key.toLowerCase() === 'f' || // zablokuje F, ale F11 pôjde
-        (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
-        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i')
-      ) {
-        e.preventDefault();
-      }
-    });
-    document.addEventListener('dblclick', e => e.preventDefault());
-  </script>
+  // Zakázať pravý klik a dvojklik
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('dblclick', e => e.preventDefault());
+</script>
 
 </body>
 </html>
