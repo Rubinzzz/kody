@@ -1,152 +1,129 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PWC #2</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      background: black;
-      font-family: Arial, sans-serif;
-      color: white;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Livestream s kódom</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%; background: black; color: white; font-family: Arial, sans-serif;
+    overflow: hidden;
+  }
+  iframe {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; border: none; z-index: 1;
+  }
+  #watermark {
+    position: fixed;
+    top: 20px; left: 20px;
+    font-size: 28px; font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 5px black;
+    z-index: 9999;
+    pointer-events: none;
+    user-select: none;
+    transition: all 0.5s ease;
+  }
+  /* Zakrytie yt elementov na desktop */
+  #block-yt-button, #block-yt-left-button, #block-yt-top-left, #block-yt-top-right {
+    position: fixed;
+    background: transparent;
+    z-index: 99999;
+    pointer-events: auto;
+  }
+  #block-yt-button { bottom: 10px; right: 10px; width: 130px; height: 40px; }
+  #block-yt-left-button { bottom: 10px; left: 10px; width: 160px; height: 50px; }
+  #block-yt-top-left { top: 0; left: 0; width: 300px; height: 60px; }
+  #block-yt-top-right { top: 10px; right: 10px; width: 150px; height: 60px; }
 
-    iframe {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      border: none;
-      z-index: 1;
-    }
-
-    #watermark {
-      position: fixed;
-      font-size: 28px;
-      font-weight: bold;
-      color: white;
-      text-shadow: 2px 2px 5px black;
-      z-index: 9999;
-      pointer-events: none;
-      user-select: none;
-      transition: all 0.5s ease;
-    }
-
-    /* Prekrytia */
+  /* Na mobile len základné - nič neblokovať */
+  @media (max-width: 768px) {
     #block-yt-button, #block-yt-left-button, #block-yt-top-left, #block-yt-top-right {
-      position: fixed;
-      background: transparent;
-      z-index: 99999;
-      pointer-events: auto;
+      display: none;
     }
-
-    #block-yt-button {
-      bottom: 10px;
-      right: 10px;
-      width: 130px;
-      height: 40px;
+    #watermark {
+      top: 10px; left: 10px; font-size: 22px;
     }
-
-    #block-yt-left-button {
-      bottom: 10px;
-      left: 10px;
-      width: 160px;
-      height: 50px;
-    }
-
-    #block-yt-top-left {
-      top: 0;
-      left: 0;
-      width: 300px;
-      height: 60px;
-    }
-
-    #block-yt-top-right {
-      top: 10px;
-      right: 10px;
-      width: 150px;
-      height: 60px;
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
 
-  <!-- YouTube video -->
-  <iframe
-    src="https://www.youtube.com/embed/dD07iE4kqys?autoplay=1&mute=1&fs=1&modestbranding=1&controls=0&rel=0"
-    allow="autoplay; encrypted-media"
-    allowfullscreen
-  ></iframe>
+<iframe
+  src="https://www.youtube.com/embed/dD07iE4kqys?autoplay=1&mute=1&fs=1&modestbranding=1&controls=0&rel=0"
+  allow="autoplay; encrypted-media"
+  allowfullscreen
+></iframe>
 
-  <!-- Vodotlač -->
-  <div id="watermark">Tvoj kód: N/A</div>
+<div id="watermark">Tvoj kód: N/A</div>
 
-  <!-- Prekrytia YouTube prvkov -->
-  <div id="block-yt-button"></div>
-  <div id="block-yt-left-button"></div>
-  <div id="block-yt-top-left"></div>
-  <div id="block-yt-top-right"></div>
+<div id="block-yt-button"></div>
+<div id="block-yt-left-button"></div>
+<div id="block-yt-top-left"></div>
+<div id="block-yt-top-right"></div>
 
-  <script>
-    const codes = {
-      "juraj.mesiarik15@gmail.com": "KOD_JURAJ_1234",
-      "macatomacko@gmail.com": "KOD_MACA_5678",
-      "matkosadovsky@gmail.com": "rbcr7"
-    };
+<script>
+  const codes = {
+    "juraj.mesiarik15@gmail.com": "KOD_JURAJ_1234",
+    "macatomacko@gmail.com": "KOD_MACA_5678"
+  };
 
-    function getParam(name) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(name)?.toLowerCase();
-    }
+  function getParam(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name)?.toLowerCase();
+  }
 
-    const email = getParam('email');
-    const watermark = document.getElementById('watermark');
+  const email = getParam('email');
+  const watermark = document.getElementById('watermark');
 
-    if (email && codes[email]) {
-      watermark.textContent = `Tvoj kód: ${codes[email]}`;
-    } else {
-      watermark.textContent = "Tvoj kód: Nie je dostupný";
-    }
+  if (email && codes[email]) {
+    watermark.textContent = `Tvoj kód: ${codes[email]}`;
+  } else {
+    watermark.textContent = "Tvoj kód: Nie je dostupný";
+  }
 
-    // Presúvanie kódu
-    const positions = [
-      { top: "20px", left: "20px", right: "", transform: "none" },
-      { top: "20px", left: "50%", right: "", transform: "translateX(-50%)" },
-      { top: "20px", left: "auto", right: "20px", transform: "none" }
-    ];
+  // Presúvanie kódu
+  const positions = [
+    { top: "20px", left: "20px", right: "", transform: "none" },
+    { top: "20px", left: "50%", right: "", transform: "translateX(-50%)" },
+    { top: "20px", left: "auto", right: "20px", transform: "none" }
+  ];
 
-    let currentPosition = 0;
+  let currentPosition = 0;
 
-    function changeWatermarkPosition() {
-      const pos = positions[currentPosition];
-      watermark.style.top = pos.top;
-      watermark.style.left = pos.left;
-      watermark.style.right = pos.right || "";
-      watermark.style.transform = pos.transform;
-      currentPosition = (currentPosition + 1) % positions.length;
-    }
+  function changeWatermarkPosition() {
+    const pos = positions[currentPosition];
+    watermark.style.top = pos.top;
+    watermark.style.left = pos.left;
+    watermark.style.right = pos.right || "";
+    watermark.style.transform = pos.transform;
+    currentPosition = (currentPosition + 1) % positions.length;
+  }
 
-    changeWatermarkPosition();
-    setInterval(changeWatermarkPosition, 15000);
+  changeWatermarkPosition();
+  setInterval(changeWatermarkPosition, 15000);
 
-    // Zablokuj pravý klik a klávesy, ale povoľ F11
+  // Desktop: blokuj pravý klik a niektoré klávesy (okrem F11)
+  function isMobile() {
+    return /Mobi|Android/i.test(navigator.userAgent);
+  }
+
+  if (!isMobile()) {
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => {
+      // Blokuj F12, Ctrl+Shift+I, Ctrl+U, Ctrl+C a klávesu F (okrem F11)
       if (
         e.key === 'F12' ||
-        e.key.toLowerCase() === 'f' ||  // zakáže F, povolí F11
-        (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
-        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i')
+        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i') ||
+        (e.ctrlKey && e.key.toLowerCase() === 'u') ||
+        (e.ctrlKey && e.key.toLowerCase() === 'c') ||
+        e.key.toLowerCase() === 'f' && !e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey && e.key !== 'F11'
       ) {
         e.preventDefault();
       }
     });
     document.addEventListener('dblclick', e => e.preventDefault());
-  </script>
+  }
+</script>
 
 </body>
 </html>
