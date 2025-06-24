@@ -33,14 +33,6 @@
     top: 20px;
     left: 20px;
   }
-  #cursor-blocker {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    pointer-events: none;
-    cursor: none;
-    z-index: 10000;
-  }
 </style>
 </head>
 <body>
@@ -52,7 +44,6 @@
 ></iframe>
 
 <div id="watermark">Tvoj kód: N/A</div>
-<div id="cursor-blocker"></div>
 
 <script>
   const codes = {
@@ -94,8 +85,10 @@
   changeWatermarkPosition();
   setInterval(changeWatermarkPosition, 15000);
 
-  // Zablokovať všetky klávesy (aj F11)
+  // Blokovanie takmer všetkých kláves, povoliť F11
   document.addEventListener('keydown', e => {
+    // Povolíme iba F11 (fullscreen)
+    if (e.key === 'F11') return;
     e.preventDefault();
   });
 
