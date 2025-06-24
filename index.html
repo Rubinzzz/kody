@@ -6,11 +6,16 @@
   <title>Livestream s kódom</title>
   <style>
     body, html {
-      margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
       background: black;
       font-family: Arial, sans-serif;
       color: white;
     }
+
     iframe {
       position: fixed;
       top: 0; left: 0;
@@ -19,10 +24,9 @@
       border: none;
       z-index: 1;
     }
+
     #watermark {
       position: fixed;
-      top: 20px;
-      left: 20px;
       font-size: 28px;
       font-weight: bold;
       color: white;
@@ -30,8 +34,9 @@
       z-index: 9999;
       pointer-events: none;
       user-select: none;
+      transition: all 0.5s ease;
     }
-    /* prekrytie pravého dolného rohu */
+
     #block-yt-button {
       position: fixed;
       bottom: 10px;
@@ -55,11 +60,9 @@
   <div id="block-yt-button"></div>
 
   <script>
-    // Emaily a ich kódy
     const codes = {
       "juraj.mesiarik15@gmail.com": "KOD_JURAJ_1234",
-      "macatomacko@gmail.com": "KOD_MACA_5678",
-      // ďalšie emaily sem pridaj
+      "macatomacko@gmail.com": "KOD_MACA_5678"
     };
 
     function getParam(name) {
@@ -76,10 +79,29 @@
       watermark.textContent = "Tvoj kód: Nie je dostupný";
     }
 
-    // Blokovanie pravého kliknutia
-    document.addEventListener('contextmenu', e => e.preventDefault());
+    // Menenie pozície kódu každých 15 sekúnd
+    const positions = [
+      { top: "20px", left: "20px", right: "", transform: "none" },
+      { top: "20px", left: "50%", right: "", transform: "translateX(-50%)" },
+      { top: "20px", left: "auto", right: "20px", transform: "none" }
+    ];
 
-    // Blokovanie fullscreen a ďalších kláves (vrátane F)
+    let currentPosition = 0;
+
+    function changeWatermarkPosition() {
+      const pos = positions[currentPosition];
+      watermark.style.top = pos.top;
+      watermark.style.left = pos.left;
+      watermark.style.right = pos.right || "";
+      watermark.style.transform = pos.transform;
+      currentPosition = (currentPosition + 1) % positions.length;
+    }
+
+    changeWatermarkPosition();
+    setInterval(changeWatermarkPosition, 15000);
+
+    // Blokovanie pravého kliknutia a fullscreen
+    document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => {
       if (
         e.key === 'F11' ||
@@ -91,16 +113,7 @@
         e.preventDefault();
       }
     });
-
-    // Blokovanie dvojkliku (fullscreen toggle)
     document.addEventListener('dblclick', e => e.preventDefault());
-
-    // Blokovanie kliknutí a pohybu myši (ak chceš viac, môžeš odkomentovať)
-    /*
-    document.addEventListener('click', e => e.preventDefault());
-    document.addEventListener('mousedown', e => e.preventDefault());
-    document.addEventListener('mousemove', e => e.preventDefault());
-    */
   </script>
 </body>
 </html>
