@@ -6,24 +6,21 @@
   <title>PWC #2</title>
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
       overflow: hidden;
       background: black;
       font-family: Arial, sans-serif;
       color: white;
     }
-
     iframe {
       position: fixed;
       top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       border: none;
       z-index: 1;
     }
-
     #watermark {
       position: fixed;
       font-size: 28px;
@@ -35,61 +32,17 @@
       user-select: none;
       transition: all 0.5s ease;
     }
-
-    /* Prekrytia */
-    #block-yt-button, #block-yt-left-button, #block-yt-top-left, #block-yt-top-right {
-      position: fixed;
-      background: transparent;
-      z-index: 99999;
-      pointer-events: auto;
-    }
-
-    #block-yt-button {
-      bottom: 10px;
-      right: 10px;
-      width: 130px;
-      height: 40px;
-    }
-
-    #block-yt-left-button {
-      bottom: 10px;
-      left: 10px;
-      width: 160px;
-      height: 50px;
-    }
-
-    #block-yt-top-left {
-      top: 0;
-      left: 0;
-      width: 300px;
-      height: 60px;
-    }
-
-    #block-yt-top-right {
-      top: 10px;
-      right: 10px;
-      width: 150px;
-      height: 60px;
-    }
   </style>
 </head>
 <body>
 
-  <!-- YouTube video -->
   <iframe
-    src="https://www.youtube.com/embed/dD07iE4kqys?autoplay=1&mute=1&fs=1&modestbranding=1&controls=0&rel=0"
+    src="https://www.youtube.com/embed/dD07iE4kqys?autoplay=1&mute=1&controls=0&rel=0"
     allow="autoplay; encrypted-media"
     allowfullscreen
   ></iframe>
 
-  <!-- Vodotlač -->
   <div id="watermark">Tvoj kód: N/A</div>
-
-  <!-- Prekrytia YouTube prvkov -->
-  <div id="block-yt-button"></div>
-  <div id="block-yt-left-button"></div>
-  <div id="block-yt-top-left"></div>
-  <div id="block-yt-top-right"></div>
 
   <script>
     const codes = {
@@ -99,8 +52,8 @@
     };
 
     function getParam(name) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(name)?.toLowerCase();
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name)?.toLowerCase();
     }
 
     const email = getParam('email');
@@ -112,33 +65,32 @@
       watermark.textContent = "Tvoj kód: Nie je dostupný";
     }
 
-    // Presúvanie kódu
     const positions = [
       { top: "20px", left: "20px", right: "", transform: "none" },
       { top: "20px", left: "50%", right: "", transform: "translateX(-50%)" },
       { top: "20px", left: "auto", right: "20px", transform: "none" }
     ];
 
-    let currentPosition = 0;
+    let currentPos = 0;
 
     function changeWatermarkPosition() {
-      const pos = positions[currentPosition];
+      const pos = positions[currentPos];
       watermark.style.top = pos.top;
       watermark.style.left = pos.left;
       watermark.style.right = pos.right || "";
       watermark.style.transform = pos.transform;
-      currentPosition = (currentPosition + 1) % positions.length;
+      currentPos = (currentPos + 1) % positions.length;
     }
 
     changeWatermarkPosition();
     setInterval(changeWatermarkPosition, 15000);
 
-    // Zablokuj pravý klik a klávesy, ale povoľ F11
+    // Blokovanie pravého kliknutia a klávesov (okrem F11)
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => {
       if (
         e.key === 'F12' ||
-        e.key.toLowerCase() === 'f' ||  // zakáže F, povolí F11
+        e.key.toLowerCase() === 'f' || // zablokuje F, ale F11 pôjde
         (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
         (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i')
       ) {
