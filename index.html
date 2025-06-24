@@ -13,7 +13,7 @@
       background: black;
       font-family: Arial, sans-serif;
       color: white;
-      cursor: none; /* 🔒 Skrytá myš */
+      cursor: none; /* Skrytie kurzora */
     }
 
     iframe {
@@ -24,117 +24,22 @@
       border: none;
       z-index: 1;
     }
-
-    #watermark {
-      position: fixed;
-      font-size: 28px;
-      font-weight: bold;
-      color: white;
-      text-shadow: 2px 2px 5px black;
-      z-index: 9999;
-      pointer-events: none;
-      user-select: none;
-      transition: all 0.5s ease;
-    }
-
-    /* Prekrytia – musia mať pointer-events: none, inak blokujú ovládanie */
-    #block-yt-button, #block-yt-left-button, #block-yt-top-left, #block-yt-top-right {
-      position: fixed;
-      background: transparent;
-      z-index: 99999;
-      pointer-events: none;
-    }
-
-    #block-yt-button {
-      bottom: 10px;
-      right: 10px;
-      width: 130px;
-      height: 40px;
-    }
-
-    #block-yt-left-button {
-      bottom: 10px;
-      left: 10px;
-      width: 160px;
-      height: 50px;
-    }
-
-    #block-yt-top-left {
-      top: 0;
-      left: 0;
-      width: 300px;
-      height: 60px;
-    }
-
-    #block-yt-top-right {
-      top: 10px;
-      right: 10px;
-      width: 150px;
-      height: 60px;
-    }
   </style>
 </head>
 <body>
 
-<iframe
-  src="https://www.youtube.com/embed/D6N3J7AkBg4?autoplay=1&mute=1&fs=1&modestbranding=1&controls=0&rel=0"
-  allow="autoplay; encrypted-media; fullscreen"
-  allowfullscreen
-></iframe>
-
-  <!-- Vodotlač -->
-  <div id="watermark">Tvoj kód: N/A</div>
-
-  <!-- Prekrytia -->
-  <div id="block-yt-button"></div>
-  <div id="block-yt-left-button"></div>
-  <div id="block-yt-top-left"></div>
-  <div id="block-yt-top-right"></div>
+  <!-- YouTube LIVE stream iframe (sem vlož správny embed link) -->
+  <iframe
+    src="https://www.youtube.com/embed/D6N3J7AkBg4?autoplay=1&mute=1&fs=1&modestbranding=1&controls=0&rel=0"
+    allow="autoplay; encrypted-media"
+    allowfullscreen
+  ></iframe>
 
   <script>
-    const codes = {
-      "juraj.mesiarik15@gmail.com": "KOD_JURAJ_1234",
-      "macatomacko@gmail.com": "KOD_MACA_5678",
-      "matkosadovsky@gmail.com": "rbcr7"
-    };
-
-    function getParam(name) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(name)?.toLowerCase();
-    }
-
-    const email = getParam('email');
-    const watermark = document.getElementById('watermark');
-
-    if (email && codes[email]) {
-      watermark.textContent = `Tvoj kód: ${codes[email]}`;
-    } else {
-      watermark.textContent = "Tvoj kód: Nie je dostupný";
-    }
-
-    // Vodotlač pozícia
-    const positions = [
-      { top: "20px", left: "20px", right: "", transform: "none" },
-      { top: "20px", left: "50%", right: "", transform: "translateX(-50%)" },
-      { top: "20px", left: "auto", right: "20px", transform: "none" }
-    ];
-
-    let currentPosition = 0;
-
-    function changeWatermarkPosition() {
-      const pos = positions[currentPosition];
-      watermark.style.top = pos.top;
-      watermark.style.left = pos.left;
-      watermark.style.right = pos.right || "";
-      watermark.style.transform = pos.transform;
-      currentPosition = (currentPosition + 1) % positions.length;
-    }
-
-    changeWatermarkPosition();
-    setInterval(changeWatermarkPosition, 15000);
-
-    // Zablokuj pravý klik + škodlivé klávesy (okrem F11)
+    // Zakáže pravý klik
     document.addEventListener('contextmenu', e => e.preventDefault());
+
+    // Povolený F11, blokovanie iných nebezpečných kláves
     document.addEventListener('keydown', e => {
       if (
         e.key === 'F12' ||
@@ -145,6 +50,7 @@
       }
     });
 
+    // Zablokuj dvojklik (pre istotu)
     document.addEventListener('dblclick', e => e.preventDefault());
   </script>
 
