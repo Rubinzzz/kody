@@ -94,6 +94,31 @@ body {
       pointer-events: auto;
       background: transparent;
     }
+
+<script>
+  // Zablokuje pravý klik
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
+  // Blokovanie klávesových skratiek okrem F11
+  document.addEventListener('keydown', e => {
+    // Ak nie je F11, zablokuj Ctrl+U, Ctrl+C, Ctrl+Shift+I, F12, atď.
+    if (
+      e.key !== 'F11' &&
+      (
+        e.key === 'F12' ||
+        e.key.toLowerCase() === 'f' ||  // napr. zakáže F, ale dovolí F11
+        (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
+        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i')
+      )
+    ) {
+      e.preventDefault();
+    }
+  });
+
+  // Voliteľne: zablokuj dvojklik, ktorý tiež môže ísť fullscreen
+  document.addEventListener('dblclick', e => e.preventDefault());
+</script>
+    
   </style>
 </head>
 <body>
