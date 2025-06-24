@@ -114,60 +114,58 @@ body {
 <div id="block-yt-left-button"></div>
 
   <script>
-    const codes = {
-      "juraj.mesiarik15@gmail.com": "KOD_JURAJ_1234",
-      "macatomacko@gmail.com": "d13fxd"
-    };
+  const codes = {
+    "juraj.mesiarik15@gmail.com": "KOD_JURAJ_1234",
+    "macatomacko@gmail.com": "KOD_MACA_5678"
+  };
 
-    function getParam(name) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(name)?.toLowerCase();
+  function getParam(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name)?.toLowerCase();
+  }
+
+  const email = getParam('email');
+  const watermark = document.getElementById('watermark');
+
+  if (email && codes[email]) {
+    watermark.textContent = `Tvoj kód: ${codes[email]}`;
+  } else {
+    watermark.textContent = "Tvoj kód: Nie je dostupný";
+  }
+
+  const positions = [
+    { top: "20px", left: "20px", right: "", transform: "none" },
+    { top: "20px", left: "50%", right: "", transform: "translateX(-50%)" },
+    { top: "20px", left: "auto", right: "20px", transform: "none" }
+  ];
+
+  let currentPosition = 0;
+
+  function changeWatermarkPosition() {
+    const pos = positions[currentPosition];
+    watermark.style.top = pos.top;
+    watermark.style.left = pos.left;
+    watermark.style.right = pos.right || "";
+    watermark.style.transform = pos.transform;
+    currentPosition = (currentPosition + 1) % positions.length;
+  }
+
+  changeWatermarkPosition();
+  setInterval(changeWatermarkPosition, 15000);
+
+  // ✅ Blokuj pravý klik, "F", F12, DevTools, ale PONECHAJ F11 (fullscreen)
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => {
+    if (
+      e.key === 'F12' ||
+      e.key.toLowerCase() === 'f' ||
+      (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
+      (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i')
+    ) {
+      e.preventDefault();
     }
-
-    const email = getParam('email');
-    const watermark = document.getElementById('watermark');
-
-    if (email && codes[email]) {
-      watermark.textContent = `Tvoj kód: ${codes[email]}`;
-    } else {
-      watermark.textContent = "Tvoj kód: Nie je dostupný";
-    }
-
-    // Menenie pozície kódu každých 15 sekúnd
-    const positions = [
-      { top: "20px", left: "20px", right: "", transform: "none" },
-      { top: "20px", left: "50%", right: "", transform: "translateX(-50%)" },
-      { top: "20px", left: "auto", right: "20px", transform: "none" }
-    ];
-
-    let currentPosition = 0;
-
-    function changeWatermarkPosition() {
-      const pos = positions[currentPosition];
-      watermark.style.top = pos.top;
-      watermark.style.left = pos.left;
-      watermark.style.right = pos.right || "";
-      watermark.style.transform = pos.transform;
-      currentPosition = (currentPosition + 1) % positions.length;
-    }
-
-    changeWatermarkPosition();
-    setInterval(changeWatermarkPosition, 15000);
-
-    // Blokovanie pravého kliknutia a fullscreen
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', e => {
-      if (
-        e.key === 'F11' ||
-        e.key === 'F12' ||
-        e.key.toLowerCase() === 'f' ||
-        (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
-        (e.ctrlKey && e.shiftKey && (e.key.toLowerCase() === 'i'))
-      ) {
-        e.preventDefault();
-      }
-    });
-    document.addEventListener('dblclick', e => e.preventDefault());
-  </script>
+  });
+  document.addEventListener('dblclick', e => e.preventDefault());
+</script>
 </body>
 </html>
