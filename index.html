@@ -85,16 +85,27 @@
   changeWatermarkPosition();
   setInterval(changeWatermarkPosition, 15000);
 
-  // Blokovanie takmer všetkých kláves, povoliť F11
-  document.addEventListener('keydown', e => {
-    // Povolíme iba F11 (fullscreen)
-    if (e.key === 'F11') return;
+  // Zakážeme všetky klávesy, myšové kliky a pohyby
+  function preventEvent(e) {
     e.preventDefault();
+    e.stopPropagation();
+  }
+
+  // Zakážeme všetky klávesy okrem F11 (fullscreen)
+  document.addEventListener('keydown', e => {
+    if (e.key === 'F11') return; // povoliť fullscreen
+    preventEvent(e);
+  }, true);
+
+  // Zakážeme všetky myšové udalosti
+  ['click', 'mousedown', 'mouseup', 'dblclick', 'contextmenu', 'mousemove', 'mouseenter', 'mouseleave'].forEach(evt => {
+    document.addEventListener(evt, preventEvent, true);
   });
 
-  // Zakázať pravý klik a dvojklik
-  document.addEventListener('contextmenu', e => e.preventDefault());
-  document.addEventListener('dblclick', e => e.preventDefault());
+  // Zakážeme dotykové udalosti pre mobil
+  ['touchstart', 'touchmove', 'touchend', 'touchcancel'].forEach(evt => {
+    document.addEventListener(evt, preventEvent, true);
+  });
 </script>
 
 </body>
