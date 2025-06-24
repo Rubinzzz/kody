@@ -16,6 +16,17 @@
       color: white;
     }
 
+    #block-yt-left-button {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  width: 160px;   /* trochu širšie než to tlačidlo */
+  height: 50px;
+  z-index: 99999;
+  pointer-events: auto;
+  background: transparent;
+}
+
     iframe {
       position: fixed;
       top: 0; left: 0;
@@ -58,6 +69,7 @@
 
   <div id="watermark">Tvoj kód: N/A</div>
   <div id="block-yt-button"></div>
+<div id="block-yt-left-button"></div>
 
   <script>
     const codes = {
