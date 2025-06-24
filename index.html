@@ -2,18 +2,66 @@
 <html lang="sk">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PWC #2</title>
   <style>
-    html, body {
+    body, html {
       margin: 0;
       padding: 0;
       height: 100%;
+      width: 100%;
       overflow: hidden;
       background: black;
       font-family: Arial, sans-serif;
       color: white;
     }
+
+#block-yt-top-right {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 150px;
+  height: 60px;
+  z-index: 99999;
+  background: transparent;
+  pointer-events: auto;
+}
+
+body {
+  cursor: none;
+}
+
+#block-yt-full {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99998;
+  background: transparent;
+}
+
+    #block-yt-top-left {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;  /* Môžeš prispôsobiť podľa potreby */
+  height: 60px;
+  z-index: 99999;
+  pointer-events: auto;
+  background: transparent;
+}
+
+    #block-yt-left-button {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  width: 160px;   /* trochu širšie než to tlačidlo */
+  height: 50px;
+  z-index: 99999;
+  pointer-events: auto;
+  background: transparent;
+}
 
     iframe {
       position: fixed;
@@ -36,66 +84,39 @@
       transition: all 0.5s ease;
     }
 
-    /* Prekrytia */
-    #block-yt-button, #block-yt-left-button, #block-yt-top-left, #block-yt-top-right {
-      position: fixed;
-      background: transparent;
-      z-index: 99999;
-      pointer-events: auto;
-    }
-
     #block-yt-button {
+      position: fixed;
       bottom: 10px;
       right: 10px;
       width: 130px;
       height: 40px;
-    }
-
-    #block-yt-left-button {
-      bottom: 10px;
-      left: 10px;
-      width: 160px;
-      height: 50px;
-    }
-
-    #block-yt-top-left {
-      top: 0;
-      left: 0;
-      width: 300px;
-      height: 60px;
-    }
-
-    #block-yt-top-right {
-      top: 10px;
-      right: 10px;
-      width: 150px;
-      height: 60px;
+      z-index: 99999;
+      pointer-events: auto;
+      background: transparent;
     }
   </style>
 </head>
 <body>
+<iframe
+  src="https://www.youtube.com/embed/dD07iE4kqys?autoplay=1&mute=1&fs=0&modestbranding=1&controls=0&rel=0"
+  allow="autoplay; encrypted-media"
+  allowfullscreen
+></iframe>
 
-  <!-- YouTube video -->
-  <iframe
-    src="https://www.youtube.com/embed/dD07iE4kqys?autoplay=1&mute=1&fs=1&modestbranding=1&controls=0&rel=0"
-    allow="autoplay; encrypted-media"
-    allowfullscreen
-  ></iframe>
+<div id="block-yt-full"></div>
 
-  <!-- Vodotlač -->
+<div id="block-yt-top-left"></div>
+
+<div id="block-yt-top-right"></div>
+
   <div id="watermark">Tvoj kód: N/A</div>
-
-  <!-- Prekrytia YouTube prvkov -->
   <div id="block-yt-button"></div>
-  <div id="block-yt-left-button"></div>
-  <div id="block-yt-top-left"></div>
-  <div id="block-yt-top-right"></div>
+<div id="block-yt-left-button"></div>
 
   <script>
     const codes = {
       "juraj.mesiarik15@gmail.com": "KOD_JURAJ_1234",
-      "macatomacko@gmail.com": "KOD_MACA_5678",
-      "matkosadovsky@gmail.com": "rbcr7"
+      "macatomacko@gmail.com": "d13fxd"
     };
 
     function getParam(name) {
@@ -112,7 +133,7 @@
       watermark.textContent = "Tvoj kód: Nie je dostupný";
     }
 
-    // Presúvanie kódu
+    // Menenie pozície kódu každých 15 sekúnd
     const positions = [
       { top: "20px", left: "20px", right: "", transform: "none" },
       { top: "20px", left: "50%", right: "", transform: "translateX(-50%)" },
@@ -133,20 +154,20 @@
     changeWatermarkPosition();
     setInterval(changeWatermarkPosition, 15000);
 
-    // Zablokuj pravý klik a klávesy, ale povoľ F11
+    // Blokovanie pravého kliknutia a fullscreen
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => {
       if (
+        e.key === 'F11' ||
         e.key === 'F12' ||
-        e.key.toLowerCase() === 'f' ||  // zakáže F, povolí F11
+        e.key.toLowerCase() === 'f' ||
         (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
-        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i')
+        (e.ctrlKey && e.shiftKey && (e.key.toLowerCase() === 'i'))
       ) {
         e.preventDefault();
       }
     });
     document.addEventListener('dblclick', e => e.preventDefault());
   </script>
-
 </body>
 </html>
