@@ -2,81 +2,80 @@
 <html lang="sk">
 <head>
   <meta charset="UTF-8" />
-  <title>Kód pre diváka</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Livestream s kódom</title>
   <style>
-    body {
-      margin: 0;
-      overflow: hidden;
+    body, html {
+      margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden;
       background: black;
-    }
-    #watermark {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      font-size: 24px;
+      font-family: Arial, sans-serif;
       color: white;
-      font-weight: bold;
-      text-shadow: 2px 2px 5px black;
-      z-index: 10;
-      pointer-events: none;
-      user-select: none;
     }
     iframe {
-      position: absolute;
+      position: fixed;
       top: 0; left: 0;
-      width: 100%; height: 100%;
+      width: 100vw;
+      height: 100vh;
       border: none;
       z-index: 1;
+    }
+    #watermark {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 2px 2px 5px black;
+      z-index: 9999;
+      pointer-events: none;
+      user-select: none;
     }
   </style>
 </head>
 <body>
-
   <iframe
     src="https://www.youtube.com/embed/dD07iE4kqys?autoplay=1&mute=1"
     allow="autoplay; encrypted-media"
     allowfullscreen
   ></iframe>
 
-  <div id="watermark">Načítavam kód...</div>
+  <div id="watermark">Tvoj kód: N/A</div>
 
   <script>
-    const emailToCodeMap = {
-      "macatomacko@gmail.com": "KOD1111",
-      "juraj.mesiarik15@gmail.com": "KOD1234"
+    // Mapa emailov a ich kódov
+    const codes = {
+      "juraj.mesiarik15@gmail.com": "KOD_JURAJ_1234",
+      "macatomacko@gmail.com": "KOD_MACA_5678"
     };
 
+    // Funkcia na získanie parametra z URL (napr. ?email=...)
     function getParam(name) {
-      const params = new URLSearchParams(window.location.search);
-      return params.get(name) ? params.get(name).toLowerCase() : "";
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
     }
 
-    const email = getParam("email");
-    let code = "Neznámy používateľ";
+    const email = getParam('email')?.toLowerCase();
+    const watermark = document.getElementById('watermark');
 
-    if (email && emailToCodeMap[email]) {
-      code = emailToCodeMap[email];
+    if (email && codes[email]) {
+      watermark.textContent = `Tvoj kód: ${codes[email]}`;
+    } else {
+      watermark.textContent = "Tvoj kód: Nie je dostupný";
     }
 
-    document.getElementById("watermark").innerText = "Tvoj kód: " + code;
+    // Blokovanie pravého kliknutia a klávesových skratiek (voliteľné)
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+      if (
+        e.key === 'F12' ||
+        e.key === 'F11' ||
+        (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i'))
+      ) {
+        e.preventDefault();
+      }
+    });
   </script>
-
 </body>
 </html>
-
-<script>
-  // Pravý klik zablokovaný
-  document.addEventListener('contextmenu', event => event.preventDefault());
-
-  // Klávesové skratky zablokované
-  document.addEventListener('keydown', event => {
-    if (
-      event.key === 'F12' ||
-      event.key === 'F11' ||
-      (event.ctrlKey && (event.key === 'u' || event.key === 'U' || event.key === 'c' || event.key === 'C')) ||
-      (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'i'))
-    ) {
-      event.preventDefault();
-    }
-  });
-</script>
