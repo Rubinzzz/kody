@@ -35,7 +35,7 @@
 </head>
 <body>
   <iframe
-    src="https://www.youtube.com/embed/dD07iE4kqys?autoplay=1&mute=1"
+    src="https://www.youtube.com/embed/dD07iE4kqys?autoplay=1&mute=1&fs=0"
     allow="autoplay; encrypted-media"
     allowfullscreen
   ></iframe>
@@ -43,13 +43,15 @@
   <div id="watermark">Tvoj kód: N/A</div>
 
   <script>
-    // Mapa emailov a ich kódov - tu jednoducho pridáš ďalších používateľov
+    // Tu pridaj emaily a ich kódy
     const codes = {
       "juraj.mesiarik15@gmail.com": "KOD_JURAJ_1234",
-      "macatomacko@gmail.com": "KOD_MACA_5678"
+      "macatomacko@gmail.com": "KOD_MACA_5678",
+      // Pridaj ďalšie emaily a kódy podľa potreby
+      // "novy.email@gmail.com": "KOD_NOVY_9999"
     };
 
-    // Funkcia na získanie parametra z URL (napr. ?email=...)
+    // Funkcia na získanie parametra "email" z URL
     function getParam(name) {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(name);
@@ -69,11 +71,10 @@
 
     // Blokovanie fullscreen cez klávesy a klávesové skratky
     document.addEventListener('keydown', e => {
-      // Zakážeme F11, F12, F, Ctrl+U, Ctrl+C, Ctrl+Shift+I
       if (
         e.key === 'F11' ||
         e.key === 'F12' ||
-        e.key.toLowerCase() === 'f' ||  // blokujeme aj klávesu F
+        e.key.toLowerCase() === 'f' ||  // blokovanie klávesy F
         (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
         (e.ctrlKey && e.shiftKey && (e.key.toLowerCase() === 'i'))
       ) {
@@ -81,7 +82,7 @@
       }
     });
 
-    // Blokovanie fullscreen cez dvojklik (dvojklik často prepína fullscreen)
+    // Blokovanie fullscreen cez dvojklik
     document.addEventListener('dblclick', e => e.preventDefault());
   </script>
 </body>
