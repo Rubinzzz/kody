@@ -16,6 +16,20 @@
       color: white;
     }
 
+body {
+  cursor: none;
+}
+
+#block-yt-full {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99998;
+  background: transparent;
+}
+
     #block-yt-top-left {
   position: fixed;
   top: 0;
@@ -77,6 +91,8 @@
   allow="autoplay; encrypted-media"
   allowfullscreen
 ></iframe>
+
+<div id="block-yt-full"></div>
 
 <div id="block-yt-top-left"></div>
 
