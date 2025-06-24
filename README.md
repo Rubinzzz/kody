@@ -1,0 +1,2 @@
+# kody
+Kódy pre stream
