@@ -43,15 +43,13 @@
   <div id="watermark">Tvoj kód: N/A</div>
 
   <script>
-    // Tu pridaj emaily a ich kódy
+    // Emaily a ich kódy
     const codes = {
       "juraj.mesiarik15@gmail.com": "KOD_JURAJ_1234",
       "macatomacko@gmail.com": "KOD_MACA_5678",
-      // Pridaj ďalšie emaily a kódy podľa potreby
-      // "novy.email@gmail.com": "KOD_NOVY_9999"
+      // ďalšie emaily sem pridaj
     };
 
-    // Funkcia na získanie parametra "email" z URL
     function getParam(name) {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(name);
@@ -69,12 +67,12 @@
     // Blokovanie pravého kliknutia
     document.addEventListener('contextmenu', e => e.preventDefault());
 
-    // Blokovanie fullscreen cez klávesy a klávesové skratky
+    // Blokovanie fullscreen a ďalších kláves
     document.addEventListener('keydown', e => {
       if (
         e.key === 'F11' ||
         e.key === 'F12' ||
-        e.key.toLowerCase() === 'f' ||  // blokovanie klávesy F
+        e.key.toLowerCase() === 'f' ||  // tu blokujeme F
         (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
         (e.ctrlKey && e.shiftKey && (e.key.toLowerCase() === 'i'))
       ) {
