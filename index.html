@@ -185,3 +185,15 @@ document.addEventListener('keydown', e => {
     e.preventDefault();
   }
 });
+
+<script>
+document.addEventListener('touchstart', () => {
+  const iframe = document.querySelector('iframe');
+  const src = iframe.src;
+  
+  // Prevent opakovaného spustenia
+  if (!src.includes("autoplay=1")) {
+    iframe.src = src + "&autoplay=1";
+  }
+}, { once: true });
+</script>
