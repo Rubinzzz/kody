@@ -112,36 +112,41 @@
   const warning = document.getElementById('duplicate-warning');
 
   const emailKeys = Object.keys(codes);
+  const tokenKey = email ? `ppv_token_${email}` : null;
 
-  // Ak je všetko vymazané z localStorage, resetuje sa
-  const isFreshStart = emailKeys.every(e => localStorage.getItem(`ppv_used_${e}`) === null);
+  // Check if all tokens were removed = fresh reset
+  const isStorageReset = emailKeys.every(e => localStorage.getItem(`ppv_token_${e}`) === null);
 
   if (email && codes[email]) {
-    const key = `ppv_used_${email}`;
-    const alreadyUsed = localStorage.getItem(key);
+    const existingToken = localStorage.getItem(tokenKey);
+    const sessionToken = sessionStorage.getItem('ppv_token');
 
-    if (alreadyUsed && !isFreshStart) {
-      warning.style.display = 'block';
+    if (!existingToken || isStorageReset) {
+      // First user or after reset
+      const newToken = crypto.randomUUID();
+      localStorage.setItem(tokenKey, newToken);
+      sessionStorage.setItem('ppv_token', newToken);
+      watermark.textContent = codes[email];
+    } else if (existingToken === sessionToken) {
+      // Refresh by original user
+      watermark.textContent = codes[email];
+    } else {
+      // Block for everyone else
       iframe.style.display = 'none';
       watermark.textContent = 'Prístup zamietnutý';
-    } else {
-      localStorage.setItem(key, 'true');
-      watermark.textContent = codes[email];
+      warning.style.display = 'block';
     }
   } else {
     iframe.style.display = 'none';
     watermark.textContent = "Tvoj kód: Nie je dostupný";
   }
 
-  // Watermark pohyb
   const positions = [
     { top: "20px", left: "20px", right: "", transform: "none" },
     { top: "20px", left: "50%", right: "", transform: "translateX(-50%)" },
     { top: "20px", left: "auto", right: "20px", transform: "none" }
   ];
-
   let currentPosition = 0;
-
   function changeWatermarkPosition() {
     const pos = positions[currentPosition];
     watermark.style.top = pos.top;
@@ -150,11 +155,9 @@
     watermark.style.transform = pos.transform;
     currentPosition = (currentPosition + 1) % positions.length;
   }
-
   changeWatermarkPosition();
   setInterval(changeWatermarkPosition, 15000);
 
-  // Zablokuj pokusy o inspect
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (
@@ -168,7 +171,6 @@
   });
   document.addEventListener('dblclick', e => e.preventDefault());
 
-  // Znovu autoplay pri dotyku na mobile
   document.addEventListener('touchstart', () => {
     const src = iframe.src;
     if (!src.includes("autoplay=1")) {
