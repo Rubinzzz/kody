@@ -111,17 +111,17 @@
   const iframe = document.getElementById('ytplayer');
   const warning = document.getElementById('duplicate-warning');
 
+  const allUsed = Object.keys(codes).every(e => localStorage.getItem(`ppv_used_${e}`) === null);
+
   if (email && codes[email]) {
     const key = `ppv_used_${email}`;
     const alreadyUsed = localStorage.getItem(key);
 
-    if (alreadyUsed) {
-      // Zablokuj prehrávanie a zobraz varovanie
+    if (alreadyUsed && !allUsed) {
       warning.style.display = 'block';
       iframe.style.display = 'none';
       watermark.textContent = 'Prístup zamietnutý';
     } else {
-      // Prvý prístup, povolíme
       localStorage.setItem(key, 'true');
       watermark.textContent = codes[email];
     }
@@ -130,7 +130,6 @@
     watermark.textContent = "Tvoj kód: Nie je dostupný";
   }
 
-  // Watermark animácia
   const positions = [
     { top: "20px", left: "20px", right: "", transform: "none" },
     { top: "20px", left: "50%", right: "", transform: "translateX(-50%)" },
@@ -151,7 +150,6 @@
   changeWatermarkPosition();
   setInterval(changeWatermarkPosition, 15000);
 
-  // Blokovanie F12, Ctrl+U, Ctrl+Shift+I atď.
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (
@@ -165,7 +163,6 @@
   });
   document.addEventListener('dblclick', e => e.preventDefault());
 
-  // Opätovné autoplay pri dotyku
   document.addEventListener('touchstart', () => {
     const src = iframe.src;
     if (!src.includes("autoplay=1")) {
