@@ -1,6 +1,1 @@
-document.addEventListener('keydown', e => {
-  if (e.key === "PrintScreen") {
-    alert("Screenshot je zakázaný!");
-    e.preventDefault();
-  }
-});
+
