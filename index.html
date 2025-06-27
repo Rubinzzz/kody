@@ -111,13 +111,16 @@
   const iframe = document.getElementById('ytplayer');
   const warning = document.getElementById('duplicate-warning');
 
-  const allUsed = Object.keys(codes).every(e => localStorage.getItem(`ppv_used_${e}`) === null);
+  const emailKeys = Object.keys(codes);
+
+  // Ak je všetko vymazané z localStorage, resetuje sa
+  const isFreshStart = emailKeys.every(e => localStorage.getItem(`ppv_used_${e}`) === null);
 
   if (email && codes[email]) {
     const key = `ppv_used_${email}`;
     const alreadyUsed = localStorage.getItem(key);
 
-    if (alreadyUsed && !allUsed) {
+    if (alreadyUsed && !isFreshStart) {
       warning.style.display = 'block';
       iframe.style.display = 'none';
       watermark.textContent = 'Prístup zamietnutý';
@@ -130,6 +133,7 @@
     watermark.textContent = "Tvoj kód: Nie je dostupný";
   }
 
+  // Watermark pohyb
   const positions = [
     { top: "20px", left: "20px", right: "", transform: "none" },
     { top: "20px", left: "50%", right: "", transform: "translateX(-50%)" },
@@ -150,6 +154,7 @@
   changeWatermarkPosition();
   setInterval(changeWatermarkPosition, 15000);
 
+  // Zablokuj pokusy o inspect
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (
@@ -163,6 +168,7 @@
   });
   document.addEventListener('dblclick', e => e.preventDefault());
 
+  // Znovu autoplay pri dotyku na mobile
   document.addEventListener('touchstart', () => {
     const src = iframe.src;
     if (!src.includes("autoplay=1")) {
