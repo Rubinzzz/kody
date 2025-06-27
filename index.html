@@ -6,13 +6,19 @@
   <title>PWC #2</title>
   <style>
     body, html {
-      margin: 0; padding: 0; height: 100%; width: 100%;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
       overflow: hidden;
       background: black;
       font-family: Arial, sans-serif;
       color: white;
     }
-    body { cursor: none; }
+
+    body {
+      cursor: none;
+    }
 
     iframe {
       position: fixed;
@@ -35,29 +41,22 @@
       transition: all 0.5s ease;
     }
 
-    #screen-blocker-watermark {
+    #block-yt-top-right,
+    #block-yt-top-left,
+    #block-yt-left-button,
+    #block-yt-button,
+    #block-yt-full {
       position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      pointer-events: none;
-      z-index: 10000;
-      color: rgba(255,255,255,0.1);
-      font-size: 10vw;
-      font-weight: bold;
-      user-select: none;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      animation: watermarkMove 20s linear infinite;
-      white-space: nowrap;
-      transform-origin: center;
-      transform: rotate(-45deg);
+      z-index: 99998;
+      background: transparent;
+      pointer-events: auto;
     }
 
-    @keyframes watermarkMove {
-      0%   { transform: translateX(-100%) rotate(-45deg);}
-      100% { transform: translateX(100%) rotate(-45deg);}
-    }
+    #block-yt-top-right { top: 10px; right: 10px; width: 150px; height: 60px; }
+    #block-yt-top-left { top: 0; left: 0; width: 300px; height: 60px; }
+    #block-yt-left-button { bottom: 10px; left: 10px; width: 160px; height: 50px; }
+    #block-yt-button { bottom: 10px; right: 10px; width: 130px; height: 40px; }
+    #block-yt-full { top: 0; left: 0; width: 100vw; height: 100vh; }
 
     #duplicate-warning {
       display: none;
@@ -94,9 +93,6 @@
 <div id="watermark">N/A</div>
 <div id="duplicate-warning">❌ Tento link je už práve používaný.</div>
 
-<!-- Transparentný veľký watermark cez celý obraz -->
-<div id="screen-blocker-watermark">PPV STREAM - NEZAZNAMENÁVAJ</div>
-
 <script>
   const codes = {
     "juraj.mesiarik15@gmail.com": "dandeska69",
@@ -126,13 +122,16 @@
     const sessionToken = sessionStorage.getItem('ppv_token');
 
     if (!existingToken || isStorageReset) {
+      // First user or after reset
       const newToken = crypto.randomUUID();
       localStorage.setItem(tokenKey, newToken);
       sessionStorage.setItem('ppv_token', newToken);
       watermark.textContent = codes[email];
     } else if (existingToken === sessionToken) {
+      // Refresh by original user
       watermark.textContent = codes[email];
     } else {
+      // Block for everyone else
       iframe.style.display = 'none';
       watermark.textContent = 'Prístup zamietnutý';
       warning.style.display = 'block';
@@ -159,30 +158,18 @@
   changeWatermarkPosition();
   setInterval(changeWatermarkPosition, 15000);
 
-  // Blokovanie pravého tlačítka, inspectu, atď.
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (
       e.key === 'F12' ||
       e.key.toLowerCase() === 'f' ||
       (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
-      (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i') ||
-      e.key === 'PrintScreen'
+      (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i')
     ) {
       e.preventDefault();
-      alert('Screenshot / nahrávanie je zakázané.');
     }
   });
   document.addEventListener('dblclick', e => e.preventDefault());
-
-  // Video pozastaví, keď používateľ prepne kartu alebo okno
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-    } else {
-      iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-    }
-  });
 
   document.addEventListener('touchstart', () => {
     const src = iframe.src;
