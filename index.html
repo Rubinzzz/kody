@@ -1,79 +1,68 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PWC #2</title>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
-      background: black;
-      font-family: Arial, sans-serif;
-      color: white;
-    }
-
-    body {
-      cursor: none;
-    }
-
-    iframe {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      border: none;
-      z-index: 1;
-    }
-
-    #watermark {
-      position: fixed;
-      font-size: 28px;
-      font-weight: bold;
-      color: white;
-      text-shadow: 2px 2px 5px black;
-      z-index: 9999;
-      pointer-events: none;
-      user-select: none;
-      transition: all 0.5s ease;
-    }
-
-    #block-yt-top-right,
-    #block-yt-top-left,
-    #block-yt-left-button,
-    #block-yt-button,
-    #block-yt-full {
-      position: fixed;
-      z-index: 99998;
-      background: transparent;
-      pointer-events: auto;
-    }
-
-    #block-yt-top-right { top: 10px; right: 10px; width: 150px; height: 60px; }
-    #block-yt-top-left { top: 0; left: 0; width: 300px; height: 60px; }
-    #block-yt-left-button { bottom: 10px; left: 10px; width: 160px; height: 50px; }
-    #block-yt-button { bottom: 10px; right: 10px; width: 130px; height: 40px; }
-    #block-yt-full { top: 0; left: 0; width: 100vw; height: 100vh; }
-
-    #duplicate-warning {
-      display: none;
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255, 0, 0, 0.8);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      z-index: 999999;
-      font-weight: bold;
-      font-size: 18px;
-      user-select: none;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PWC #2</title>
+<style>
+  body, html {
+    margin: 0; padding: 0; height: 100%; width: 100%;
+    overflow: hidden;
+    background: black;
+    font-family: Arial, sans-serif;
+    color: white;
+  }
+  iframe {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    border: none;
+    z-index: 1;
+  }
+  #watermark {
+    position: fixed;
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 5px black;
+    z-index: 9999;
+    pointer-events: none;
+    user-select: none;
+    transition: all 0.5s ease;
+  }
+  #alert-watermark {
+    display: none;
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 64px;
+    font-weight: bold;
+    color: rgba(255,0,0,0.85);
+    text-shadow: 3px 3px 10px black;
+    z-index: 100000;
+    pointer-events: none;
+    user-select: none;
+    background: rgba(0,0,0,0.7);
+    padding: 20px 40px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  #duplicate-warning {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    z-index: 999999;
+    font-weight: bold;
+    font-size: 18px;
+    user-select: none;
+  }
+</style>
 </head>
 <body>
 
@@ -84,14 +73,9 @@
   allowfullscreen
 ></iframe>
 
-<div id="block-yt-full"></div>
-<div id="block-yt-top-left"></div>
-<div id="block-yt-top-right"></div>
-<div id="block-yt-button"></div>
-<div id="block-yt-left-button"></div>
-
 <div id="watermark">N/A</div>
-<div id="duplicate-warning">❌ Tento link sa práve používa.</div>
+<div id="duplicate-warning">❌ Tento link je už práve používaný.</div>
+<div id="alert-watermark">Čo to? Čo to?</div>
 
 <script>
   const codes = {
@@ -110,11 +94,11 @@
   const watermark = document.getElementById('watermark');
   const iframe = document.getElementById('ytplayer');
   const warning = document.getElementById('duplicate-warning');
+  const alertWatermark = document.getElementById('alert-watermark');
 
   const emailKeys = Object.keys(codes);
   const tokenKey = email ? `ppv_token_${email}` : null;
 
-  // Check if all tokens were removed = fresh reset
   const isStorageReset = emailKeys.every(e => localStorage.getItem(`ppv_token_${e}`) === null);
 
   if (email && codes[email]) {
@@ -122,16 +106,13 @@
     const sessionToken = sessionStorage.getItem('ppv_token');
 
     if (!existingToken || isStorageReset) {
-      // First user or after reset
       const newToken = crypto.randomUUID();
       localStorage.setItem(tokenKey, newToken);
       sessionStorage.setItem('ppv_token', newToken);
       watermark.textContent = codes[email];
     } else if (existingToken === sessionToken) {
-      // Refresh by original user
       watermark.textContent = codes[email];
     } else {
-      // Block for everyone else
       iframe.style.display = 'none';
       watermark.textContent = 'Prístup zamietnutý';
       warning.style.display = 'block';
@@ -158,19 +139,38 @@
   changeWatermarkPosition();
   setInterval(changeWatermarkPosition, 15000);
 
+  // Zablokovanie PrintScreen a zobraz alert watermark
+  document.addEventListener('keydown', e => {
+    if (e.key === "PrintScreen") {
+      alertWatermark.style.display = 'block';
+      setTimeout(() => {
+        alertWatermark.style.display = 'none';
+      }, 5000);
+    }
+  });
+
+  // Pri prepnutí stránky zobrazi alert watermark
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      alertWatermark.style.display = 'block';
+    } else {
+      alertWatermark.style.display = 'none';
+    }
+  });
+
+  // Zablokovanie kontext menu a niektorých kláves (ako F12, Ctrl+Shift+I)
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (
       e.key === 'F12' ||
-      e.key.toLowerCase() === 'f' ||
       (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
       (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i')
     ) {
       e.preventDefault();
     }
   });
-  document.addEventListener('dblclick', e => e.preventDefault());
 
+  // Pre autoplay pri dotyku na mobile
   document.addEventListener('touchstart', () => {
     const src = iframe.src;
     if (!src.includes("autoplay=1")) {
