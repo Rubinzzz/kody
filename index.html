@@ -16,9 +16,52 @@
       color: white;
     }
 
-    body {
-      cursor: none;
-    }
+#block-yt-top-right {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 150px;
+  height: 60px;
+  z-index: 99999;
+  background: transparent;
+  pointer-events: auto;
+}
+
+body {
+  cursor: none;
+}
+
+#block-yt-full {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99998;
+  background: transparent;
+}
+
+    #block-yt-top-left {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;  /* Môžeš prispôsobiť podľa potreby */
+  height: 60px;
+  z-index: 99999;
+  pointer-events: auto;
+  background: transparent;
+}
+
+    #block-yt-left-button {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  width: 160px;   /* trochu širšie než to tlačidlo */
+  height: 50px;
+  z-index: 99999;
+  pointer-events: auto;
+  background: transparent;
+}
 
     iframe {
       position: fixed;
@@ -41,144 +84,104 @@
       transition: all 0.5s ease;
     }
 
-    #block-yt-top-right,
-    #block-yt-top-left,
-    #block-yt-left-button,
-    #block-yt-button,
-    #block-yt-full {
+    #block-yt-button {
       position: fixed;
-      z-index: 99998;
-      background: transparent;
+      bottom: 10px;
+      right: 10px;
+      width: 130px;
+      height: 40px;
+      z-index: 99999;
       pointer-events: auto;
-    }
-
-    #block-yt-top-right { top: 10px; right: 10px; width: 150px; height: 60px; }
-    #block-yt-top-left { top: 0; left: 0; width: 300px; height: 60px; }
-    #block-yt-left-button { bottom: 10px; left: 10px; width: 160px; height: 50px; }
-    #block-yt-button { bottom: 10px; right: 10px; width: 130px; height: 40px; }
-    #block-yt-full { top: 0; left: 0; width: 100vw; height: 100vh; }
-
-    #duplicate-warning {
-      display: none;
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255, 0, 0, 0.8);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      z-index: 999999;
-      font-weight: bold;
-      font-size: 18px;
-      user-select: none;
+      background: transparent;
     }
   </style>
 </head>
 <body>
-
 <iframe
-  id="ytplayer"
   src="https://www.youtube.com/embed/cCEuSFXGhbw?autoplay=1&mute=1&fs=1&modestbranding=1&controls=0&rel=0"
   allow="autoplay; encrypted-media"
   allowfullscreen
 ></iframe>
 
 <div id="block-yt-full"></div>
+
 <div id="block-yt-top-left"></div>
+
 <div id="block-yt-top-right"></div>
-<div id="block-yt-button"></div>
+
+  <div id="watermark">N/A</div>
+  <div id="block-yt-button"></div>
 <div id="block-yt-left-button"></div>
 
-<div id="watermark">N/A</div>
-<div id="duplicate-warning">❌ Tento link je už práve používaný.</div>
+  <script>
+    const codes = {
+      "juraj.mesiarik15@gmail.com": "dandeska69",
+      "macatomacko@gmail.com": "d13fxd",
+      "lukasradik1@gmail.com": "lukas_mobil_",
+      "matkosadovsky7@gmail.com": "PREMIUM7"
+    };
 
-<script>
-  const codes = {
-    "juraj.mesiarik15@gmail.com": "dandeska69",
-    "macatomacko@gmail.com": "d13fxd",
-    "Kristianbakaj2010@gmail.com": "kristian.bakaj.free.ppv",
-    "trolakola7@gmail.com": "lukas.radik.free.ppv",
-    "pwcowneracc": "PREMIUM7"
-  };
+    function getParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name)?.toLowerCase();
+    }
 
-  function getParam(name) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(name)?.toLowerCase();
-  }
+    const email = getParam('email');
+    const watermark = document.getElementById('watermark');
 
-  const email = getParam('email');
-  const watermark = document.getElementById('watermark');
-  const iframe = document.getElementById('ytplayer');
-  const warning = document.getElementById('duplicate-warning');
-
-  const emailKeys = Object.keys(codes);
-  const tokenKey = email ? `ppv_token_${email}` : null;
-
-  // Check if all tokens were removed = fresh reset
-  const isStorageReset = emailKeys.every(e => localStorage.getItem(`ppv_token_${e}`) === null);
-
-  if (email && codes[email]) {
-    const existingToken = localStorage.getItem(tokenKey);
-    const sessionToken = sessionStorage.getItem('ppv_token');
-
-    if (!existingToken || isStorageReset) {
-      // First user or after reset
-      const newToken = crypto.randomUUID();
-      localStorage.setItem(tokenKey, newToken);
-      sessionStorage.setItem('ppv_token', newToken);
-      watermark.textContent = codes[email];
-    } else if (existingToken === sessionToken) {
-      // Refresh by original user
-      watermark.textContent = codes[email];
+    if (email && codes[email]) {
+      watermark.textContent = `${codes[email]}`;
     } else {
-      // Block for everyone else
-      iframe.style.display = 'none';
-      watermark.textContent = 'Prístup zamietnutý';
-      warning.style.display = 'block';
+      watermark.textContent = "Tvoj kód: Nie je dostupný";
     }
-  } else {
-    iframe.style.display = 'none';
-    watermark.textContent = "Tvoj kód: Nie je dostupný";
-  }
 
-  const positions = [
-    { top: "20px", left: "20px", right: "", transform: "none" },
-    { top: "20px", left: "50%", right: "", transform: "translateX(-50%)" },
-    { top: "20px", left: "auto", right: "20px", transform: "none" }
-  ];
-  let currentPosition = 0;
-  function changeWatermarkPosition() {
-    const pos = positions[currentPosition];
-    watermark.style.top = pos.top;
-    watermark.style.left = pos.left;
-    watermark.style.right = pos.right || "";
-    watermark.style.transform = pos.transform;
-    currentPosition = (currentPosition + 1) % positions.length;
-  }
-  changeWatermarkPosition();
-  setInterval(changeWatermarkPosition, 15000);
+    // Menenie pozície kódu každých 15 sekúnd
+    const positions = [
+      { top: "20px", left: "20px", right: "", transform: "none" },
+      { top: "20px", left: "50%", right: "", transform: "translateX(-50%)" },
+      { top: "20px", left: "auto", right: "20px", transform: "none" }
+    ];
 
-  document.addEventListener('contextmenu', e => e.preventDefault());
-  document.addEventListener('keydown', e => {
-    if (
-      e.key === 'F12' ||
-      e.key.toLowerCase() === 'f' ||
-      (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
-      (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i')
-    ) {
-      e.preventDefault();
+    let currentPosition = 0;
+
+    function changeWatermarkPosition() {
+      const pos = positions[currentPosition];
+      watermark.style.top = pos.top;
+      watermark.style.left = pos.left;
+      watermark.style.right = pos.right || "";
+      watermark.style.transform = pos.transform;
+      currentPosition = (currentPosition + 1) % positions.length;
     }
-  });
-  document.addEventListener('dblclick', e => e.preventDefault());
 
-  document.addEventListener('touchstart', () => {
-    const src = iframe.src;
-    if (!src.includes("autoplay=1")) {
-      iframe.src = src + "&autoplay=1";
-    }
-  }, { once: true });
-</script>
+    changeWatermarkPosition();
+    setInterval(changeWatermarkPosition, 15000);
 
+    // Blokovanie pravého kliknutia a fullscreen
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+      if (
+        e.key === 'F11' ||
+        e.key === 'F12' ||
+        e.key.toLowerCase() === 'f' ||
+        (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
+        (e.ctrlKey && e.shiftKey && (e.key.toLowerCase() === 'i'))
+      ) {
+        e.preventDefault();
+      }
+    });
+    document.addEventListener('dblclick', e => e.preventDefault());
+  </script>
 </body>
 </html>
+
+document.addEventListener('keydown', e => {
+  // Povoľ F11, zablokuj všetko ostatné, čo si chcel blokovať
+  if (
+    e.key === 'F12' || // blokuj F12
+    e.key.toLowerCase() === 'f' || // blokuj písmeno F (nie F11)
+    (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
+    (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i')
+  ) {
+    e.preventDefault();
+  }
+});
