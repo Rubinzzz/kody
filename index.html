@@ -16,53 +16,6 @@
       color: white;
     }
 
-#block-yt-top-right {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  width: 150px;
-  height: 60px;
-  z-index: 99999;
-  background: transparent;
-  pointer-events: auto;
-}
-
-body {
-  cursor: none;
-}
-
-#block-yt-full {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 99998;
-  background: transparent;
-}
-
-    #block-yt-top-left {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 300px;  /* Môžeš prispôsobiť podľa potreby */
-  height: 60px;
-  z-index: 99999;
-  pointer-events: auto;
-  background: transparent;
-}
-
-    #block-yt-left-button {
-  position: fixed;
-  bottom: 10px;
-  left: 10px;
-  width: 160px;   /* trochu širšie než to tlačidlo */
-  height: 50px;
-  z-index: 99999;
-  pointer-events: auto;
-  background: transparent;
-}
-
     iframe {
       position: fixed;
       top: 0; left: 0;
@@ -78,47 +31,57 @@ body {
       font-weight: bold;
       color: white;
       text-shadow: 2px 2px 5px black;
-      z-index: 9999;
+      z-index: 99999;
       pointer-events: none;
       user-select: none;
       transition: all 0.5s ease;
     }
 
-    #block-yt-button {
+    /* Skryté interaktívne elementy (môžeš upraviť alebo vymazať, ak ich nepotrebuješ) */
+    #block-yt-top-left,
+    #block-yt-top-right,
+    #block-yt-left-button,
+    #block-yt-button,
+    #block-yt-full {
       position: fixed;
-      bottom: 10px;
-      right: 10px;
-      width: 130px;
-      height: 40px;
-      z-index: 99999;
-      pointer-events: auto;
       background: transparent;
+      pointer-events: auto;
+      z-index: 99998;
+    }
+
+    #block-yt-top-left { top: 0; left: 0; width: 300px; height: 60px; }
+    #block-yt-top-right { top: 10px; right: 10px; width: 150px; height: 60px; }
+    #block-yt-left-button { bottom: 10px; left: 10px; width: 160px; height: 50px; }
+    #block-yt-button { bottom: 10px; right: 10px; width: 130px; height: 40px; }
+    #block-yt-full { top: 0; left: 0; width: 100vw; height: 100vh; }
+
+    body {
+      cursor: none;
     }
   </style>
 </head>
 <body>
-<iframe
-  src="https://www.youtube.com/embed/cCEuSFXGhbw?autoplay=1&mute=1&fs=1&modestbranding=1&controls=0&rel=0"
-  allow="autoplay; encrypted-media"
-  allowfullscreen
-></iframe>
+  <iframe
+    src="https://www.youtube.com/embed/cCEuSFXGhbw?autoplay=1&mute=1&fs=1&modestbranding=1&controls=0&rel=0"
+    allow="autoplay; encrypted-media"
+    allowfullscreen
+  ></iframe>
 
-<div id="block-yt-full"></div>
-
-<div id="block-yt-top-left"></div>
-
-<div id="block-yt-top-right"></div>
-
-  <div id="watermark">N/A</div>
+  <div id="block-yt-full"></div>
+  <div id="block-yt-top-left"></div>
+  <div id="block-yt-top-right"></div>
   <div id="block-yt-button"></div>
-<div id="block-yt-left-button"></div>
+  <div id="block-yt-left-button"></div>
+
+  <!-- Watermark kód -->
+  <div id="watermark">Načítava sa...</div>
 
   <script>
     const codes = {
-      "juraj.mesiarik15@gmail.com": "dandeska69",
-      "macatomacko@gmail.com": "d13fxd",
-      "lukasradik1@gmail.com": "lukas_mobil_",
-      "matkosadovsky7@gmail.com": "PREMIUM7"
+      "kristianbakaj2010@gmail.com": "kristian-bakaj.free-ppv",
+      "dominikmartinsky369@gmail.com": "dominik-martinsky.free-ppv",
+      "jakubfoltan9@gmail.com": "jakub-foltan.free-ppv",
+      "davidfazik1@gmail.com": "david-fazik.free-ppv"
     };
 
     function getParam(name) {
@@ -130,7 +93,7 @@ body {
     const watermark = document.getElementById('watermark');
 
     if (email && codes[email]) {
-      watermark.textContent = `${codes[email]}`;
+      watermark.textContent = codes[email];
     } else {
       watermark.textContent = "Tvoj kód: Nie je dostupný";
     }
@@ -156,32 +119,20 @@ body {
     changeWatermarkPosition();
     setInterval(changeWatermarkPosition, 15000);
 
-    // Blokovanie pravého kliknutia a fullscreen
+    // Blokovanie pravého kliknutia a kláves
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => {
       if (
-        e.key === 'F11' ||
         e.key === 'F12' ||
         e.key.toLowerCase() === 'f' ||
         (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
-        (e.ctrlKey && e.shiftKey && (e.key.toLowerCase() === 'i'))
+        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i')
       ) {
         e.preventDefault();
       }
     });
+
     document.addEventListener('dblclick', e => e.preventDefault());
   </script>
 </body>
 </html>
-
-document.addEventListener('keydown', e => {
-  // Povoľ F11, zablokuj všetko ostatné, čo si chcel blokovať
-  if (
-    e.key === 'F12' || // blokuj F12
-    e.key.toLowerCase() === 'f' || // blokuj písmeno F (nie F11)
-    (e.ctrlKey && (e.key === 'u' || e.key === 'c')) ||
-    (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i')
-  ) {
-    e.preventDefault();
-  }
-});
